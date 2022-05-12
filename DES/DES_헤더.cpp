@@ -142,6 +142,29 @@ void DES_Encryption(BYTE* p_text, BYTE* result, BYTE* key) {
 	IIP(data, result);
 }
 
+void DES_Decryption2(BYTE* c_text, BYTE* result, BYTE* key) {
+	int i = 0;
+	BYTE data[BLOCK_SIZE] = { 0, };
+	BYTE round_key[DES_ROUND][6] = { 0, };
+	UINT L = 0, R = 0;
+	
+	Key_Expansion(key, round_key);
+	IP(c_text, data);
+
+	BtoW(data, &L, &R);
+
+	for (i = 0; i < DES_ROUND; ++i)
+	{
+		L = L ^ f(R, round_key[DES_ROUND - 1 - i]);
+		if (i != DES_ROUND - 1)
+		{
+			Swap(&L, &R);
+		}
+	}
+
+	WtoB(L, R, data);
+	IIP(data, result);
+}
 
 void DES_Decryption(BYTE* c_text, BYTE* result, BYTE* key) {
 	int i = 0;

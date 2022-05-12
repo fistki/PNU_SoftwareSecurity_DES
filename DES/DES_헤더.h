@@ -36,3 +36,5 @@ void IIP(BYTE* in, BYTE* out);
 void IP(BYTE* in, BYTE* out);
 void DES_Decryption(BYTE* c_text, BYTE* result, BYTE* key);
 void DES_Encryption(BYTE* p_text, BYTE* result, BYTE* key);
+
+void DES_Decryption2(BYTE* c_text, BYTE* result, BYTE* key);
