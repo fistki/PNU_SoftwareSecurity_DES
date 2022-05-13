@@ -1,9 +1,20 @@
 #include "BlockCipherMode.h"
 
+void DES_ECB_Enc(BYTE* plainText, BYTE* cipherText, BYTE* IV, BYTE* key, int32_t msg_len)
+{
+	uint32_t blockNum = 0;
+	const uint32_t blockCount = msg_len / BLOCK_SIZE;
+
+	for (blockNum = 0; blockNum < blockCount; ++blockNum)
+	{
+		DES_Encryption(&plainText[blockNum * BLOCK_SIZE], &cipherText[blockNum * BLOCK_SIZE], key);
+	}
+}
+
 void DES_CBC_Enc(BYTE* plainText, BYTE* cipherText, BYTE* IV, BYTE* key, int32_t msg_len)
 {
 	uint32_t blockNum = 0, byteIndex = 0;
-
+		
 	const uint32_t blockCount = msg_len / BLOCK_SIZE;
 
 	BYTE encryptInput[BLOCK_SIZE] = { 0, };
@@ -96,6 +107,17 @@ void DES_CTR_Enc(BYTE* plainText, BYTE* cipherText, UINT64 ctr, BYTE* key, int32
 		}
 
 		blockInput[BLOCK_SIZE - 1]++;
+	}
+}
+
+void DES_ECB_Dec(BYTE* cipherText, BYTE* plainText, BYTE* IV, BYTE* key, int32_t msg_len)
+{
+	uint32_t blockNum = 0;
+	const uint32_t blockCount = msg_len / BLOCK_SIZE;
+
+	for (blockNum = 0; blockNum < blockCount; ++blockNum)
+	{
+		DES_Decryption(&cipherText[blockNum * BLOCK_SIZE], &plainText[blockNum * BLOCK_SIZE], key);
 	}
 }
 

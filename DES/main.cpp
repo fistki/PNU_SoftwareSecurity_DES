@@ -4,9 +4,10 @@
 #include <vector>
 #include "BlockCipherMode.h"
 #pragma warning(disable:4996)
+
 #define BUF_SIZE 128
 #define BLOCK_MODE 1	/* 1: CBC, 2: CFB, 3: OFB, 4: CTR */
-#define TEST 1
+
 void ClearReadBuffer(void)
 {
     while (getchar() != '\n');
@@ -23,7 +24,8 @@ int main()
     int32_t msg_len;
     UINT64 ctr = 0;
 
-#if(TEST == 1)
+#define TEST false
+#if(TEST)
     strcpy((char*)p_text, "Computer Security");
     strcpy((char*)key, "security");
     strcpy((char*)IV, "iloveyou");
@@ -52,12 +54,13 @@ int main()
 #endif
 #endif
 
-
     /* 메시지 길이 계산 */
     msg_len = (strlen((char*)p_text) % BLOCK_SIZE) ?
         ((strlen((char*)p_text) / BLOCK_SIZE + 1) * BLOCK_SIZE) : strlen((char*)p_text);
 
-#if(BLOCK_MODE == 1)
+#if(BLOCK_MODE == 0)
+    DES_ECB_Enc(p_text, c_text, IV, key, msg_len);
+#elif(BLOCK_MODE == 1)
     DES_CBC_Enc(p_text, c_text, IV, key, msg_len); //DES-CBC 암호화
 #elif(BLOCK_MODE == 2)
     DES_CFB_Enc(p_text, c_text, IV, key, msg_len); //DES-CFB 암호화
@@ -74,7 +77,9 @@ int main()
         printf("%02x ", c_text[i]);
     printf("\n");
 
-#if(BLOCK_MODE == 1)
+#if(BLOCK_MODE == 0)
+    DES_ECB_Dec(c_text, d_text, IV, key, msg_len);
+#elif(BLOCK_MODE == 1)
     DES_CBC_Dec(c_text, d_text, IV, key, msg_len);//DES-CBC 복호화
 #elif(BLOCK_MODE == 2)
     DES_CFB_Dec(c_text, d_text, IV, key, msg_len);//DES-CFB 복호화
